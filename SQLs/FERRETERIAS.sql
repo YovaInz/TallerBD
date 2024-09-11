@@ -8,8 +8,12 @@ ZONANOMBRE NVARCHAR(50) NOT NULL,
 ZONADESCRIPCION NVARCHAR(200) NULL)
 GO
 SELECT * FROM ZONAS
+<<<<<<< HEAD
 GO 
 CREATE TABLE MUNICIPIOS(
+=======
+GO CREATE TABLE MUNICIPIOS(
+>>>>>>> 779ab5f (CONGRESO.SQL CREATED)
 MUNID INT NOT NULL,
 MUNNOMBRE NVARCHAR(50)NOT NULL,
 LADA NCHAR(3) NULL)
@@ -22,8 +26,12 @@ MUNID INT NOT NULL)
 GO
 CREATE TABLE FAMILIAS(
 FAMID INT NOT NULL,
+<<<<<<< HEAD
 FAMNOMBRE NVARCHAR(20) NOT NULL,
 FAMDESCRIPCION NVARCHAR(200) NOT NULL)
+=======
+)
+>>>>>>> 779ab5f (CONGRESO.SQL CREATED)
 GO
 CREATE TABLE FERRETERIAS(
 FERRID INT NOT NULL,
@@ -80,6 +88,7 @@ ARTID INT NOT NULL,
 CANTIDAD NUMERIC(7,2) NOT NULL, ---->-+99,999.99
 PRECIO NUMERIC(10,2) NOT NULL) ---->-+99,999,999.99
 GO
+<<<<<<< HEAD
 -- creamos la llave primaria de zonas
 alter table zonas add constraint pk_zonas primary key(zonaid)
 -- eliminamos los registros de zonas
@@ -298,3 +307,5 @@ insert colonias values (9, 'Col.Zapata', NULL, 1)
 select * from colonias
 
 
+=======
+>>>>>>> 779ab5f (CONGRESO.SQL CREATED)
