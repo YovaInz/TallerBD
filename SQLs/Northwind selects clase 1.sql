@@ -43,7 +43,7 @@ select productname, 'cuadrado' = power(unitprice, 2) from products
 -- imprimir la raiz cuadrada del precio de los productos
 select productname, unitprice, 'raiz cuadrada' = sqrt(unitprice) from products
 
--------------------------CLASE 2 (11/09/2024)---------------------------
+--!-----------------------CLASE 2 (11/09/2024)---------------------------
 use Northwind
 --* concatenacion 
 -- mostrar el nombre completo de empleado
@@ -115,3 +115,125 @@ select * from orders where orderdate  between '1-1-1998' and '6-30-1998'
 
 -- productos que valtan 10, 20 o 31
 select * from products where unitprice in (10,20,31)
+
+--!-----------------------CLASE 3 (12/09/2024)---------------------------
+use northwind
+--mostrar los productos con precio de 18, 25 o 30
+select productid, productname, unitprice
+from products
+where
+unitprice = 18
+or unitprice = 25
+or unitprice = 30
+
+-- mostrar los productos con un precio entre 20 y 30 pesos
+select productid, productname, unitprice
+from products
+where
+unitprice >= 20
+and unitprice <= 30
+
+--mostrar los empleados que hayan nacido en marzo, agosto o noviembre
+select employeeid, firstname, mes = month(BirthDate)
+from employees
+where
+month(BirthDate) = 3
+or month(BirthDate) = 8
+or month(BirthDate) = 11;
+
+
+-- mostrar las ordenes realizadas el primer semestre de 1998
+select orderdate, mes = month(orderdate), año = year(orderdate)
+from orders
+where
+month(orderdate) between 1 and 6
+and year(orderdate) = 1998;
+
+--? consultar por elementos dentro de un texto
+--? manejo de cadena de caracteres
+USE Northwind
+-- consulta con los productos donde su nombre sea ikura
+select * from products where productname like 'ikura'
+
+-- consulta con los productos que empiecen con el texto "queso"
+select * from products where productname like 'queso%'
+
+-- consulta con los productos que terminen con la cadena "es"
+select * from products where productname like '%ES'
+
+-- consulta con los productos que contenga la cadena "as"
+select * from products where productname like '%as%'
+
+-- consulta con los productos que empiecen con la letra G y terminen con la letra A
+select * from products where productname like 'g%a'
+
+-- consulta con los productos que empiecen con M, G o R
+select * from products where productname like '[mgr]%'
+
+select * from products
+where ProductName like 'm%' or productname like 'g%' or ProductName like 'r%'
+
+select * from Products
+where substring(productname,1,1) in ('m','g','r')
+
+-- consulta con los productos que terminen con consonantes
+select * from products where productname like '%[^aeiou]'
+
+select * from products where productname not like '%[aeiou]'
+
+-- consulta con los productos que tengan 5 caracteres
+select * from products where productname like '_____' -- son 5 guines bajos( _ )
+
+select * from products where len(productname) = 5
+
+-- consulta con los productos que en la tercera posicion tenga una VOCAL
+select * from products where productname like '__[aeiou]%'
+
+-- productos que su primera palabra tenga 5 caracteres
+select * from products where productname like '_____ %'-- 5 guines bajos, un espacio en blanco y el porciento
+
+--? Valores desconocidos
+-- consulta con los empleados que no tienen asignada una region
+select firstname, region from Employees where Region is NULL
+-- esto es un error
+select * from Employees where Region = null
+
+-- consulta con los clientes que si tienen asignado un fax
+select customerid, CompanyName, fax from Customers
+where fax is not null
+
+--? Ordenamiento
+-- consulta con los nombres de los empleados por apellido 
+select Employeeid, lastname, firstname from Employees
+order by lastname asc -- asc se usa para ordenar de menor a mayor
+
+-- consulta con los productos ordenados de mayor a menor precio
+select productid, productname, unitprice from Products
+order by unitprice desc -- desc se usa para ordenar de mayor a menor
+
+select productid, productname, unitprice from Products
+order by 3 DESC -- el 3 significa la tercer columna de la consulta en este caso es unitprice
+
+--? Ordenamiento / sentencia TOP
+-- consulta con los 5 productos mas caros
+select TOP 5 productid, productname, unitprice from Products
+order by unitprice DESC
+
+-- consulta con los 2 empleados mas jovenes
+select TOP 2 Employeeid, firstname, birthdate
+from Employees
+order by BirthDate desc
+
+-- consulta con las ultimas 5 ordenes de 1996 del empleado 2
+select orderid, orderdate, employeeid
+from Orders
+where employeeid = 2 and year(orderdate) = 1996
+order by orderdate desc
+
+-- consulta con los 2 productos mas baratos del proveedor 2
+select top 2 productid, productname, unitprice, supplierid 
+from products
+where supplierid = 2
+order by unitprice asc
+
+--?doctor consultorio y paciente van conectados a registro de citas
