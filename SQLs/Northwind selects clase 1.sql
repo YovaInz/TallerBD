@@ -86,6 +86,7 @@ select employeeid, firstname,  birthdate,
 datediff(yy, birthdate, getdate()) ,
 year(getdate()) - year(birthdate)
 from employees
+--*   DATEDIFF(unidad de tiempo, fecha inicial, fecha final) 
 
 -- consulta con el nombre y la antiguedad de los empleados
 select firstname, hiredate, Antiguedad = datediff(yy, hiredate, getdate())
