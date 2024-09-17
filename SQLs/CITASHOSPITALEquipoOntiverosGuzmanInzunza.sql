@@ -1,0 +1,277 @@
+-- *CREACION DE LA BASE DE DATOS
+CREATE DATABASE CITASHOSPITAL
+GO
+
+-- *USAR LA BASE DE DATOS
+USE CITASHOSPITAL
+GO
+
+-- *CREACION DE TABLAS
+CREATE TABLE CONSULTORIO(
+    CONID INT NOT NULL,
+    CONNOMBRE NVARCHAR(50) NOT NULL,
+    CONDIRECCION NVARCHAR(50) NOT NULL,
+    CONTELEFONO NCHAR(10) NULL)
+GO
+CREATE TABLE PACIENTE(
+    PACID INT NOT NULL,
+    PACNOMBRE NVARCHAR(50) NOT NULL,
+    PACAPEPAT NVARCHAR(50) NOT NULL,
+    PACAPEMAT NVARCHAR(50) NULL,
+    PACFECHANACIMIENTO DATE NOT NULL,
+    PACTELEFONO NCHAR(10) NULL)
+GO
+CREATE TABLE ESPECIALIDAD(
+    ESPID INT NOT NULL,
+    ESPNOMBRE NVARCHAR(50))
+GO
+CREATE TABLE DOCTOR(
+    DOCID INT NOT NULL,
+    DOCNOMBRE NVARCHAR(50) NOT NULL,
+    DOCAPEPAT NVARCHAR(50) NOT NULL,
+    DOCAPEMAT NVARCHAR(50) NULL,
+    DOCCEDULA NVARCHAR(50) NOT NULL,
+    ESPID INT NOT NULL)
+GO
+CREATE TABLE LABORATORIOS(
+    LABID INT NOT NULL,
+    LABNOMBRE NVARCHAR(50) NOT NULL,
+    LABDIRECCION NVARCHAR(50) NOT NULL,)
+GO
+CREATE TABLE MEDICAMENTOS(
+    MEDID INT NOT NULL,
+    MEDNOMBRE NVARCHAR(50) NOT NULL,
+    MEDSUSACT NVARCHAR(50))
+GO
+CREATE TABLE RECETA(
+    RECID INT NOT NULL,
+    RECFECHA DATE,
+    CITAID INT NOT NULL)
+GO
+CREATE TABLE CITAS(
+    CITAID INT NOT NULL,
+    CITAPRESION NVARCHAR(20) NULL,
+    CITAPESO NUMERIC(5,2) NULL,
+    CITAALTURA NUMERIC(3,2) NULL,
+    CITASINTOMAS NVARCHAR(200) NOT NULL,
+    CITADIAGNOSTICO NVARCHAR(200) NOT NULL,
+    PACID INT NOT NULL,
+    CONID INT NOT NULL,
+    DOCID INT NOT NULL)
+GO
+CREATE TABLE MEDICAMENTOSXRECETA(
+    RECID INT NOT NULL,
+    MEDID INT NOT NULL,
+    DOSIS NVARCHAR(10) NOT NULL,
+    TIEMPOCONSUMO NVARCHAR(50) NOT NULL)
+GO
+CREATE TABLE MEDICAMENTOSXLABORATORIOS(
+    MEDID INT NOT NULL,
+    LABID INT NOT NULL)
+GO
+-- *CREACION DE LLAVES PRIMARIAS
+ALTER TABLE CONSULTORIO ADD CONSTRAINT pkConsultorio PRIMARY KEY (CONID)
+GO
+ALTER TABLE PACIENTE ADD CONSTRAINT pkPaciente PRIMARY KEY (PACID)
+GO
+ALTER TABLE ESPECIALIDAD ADD CONSTRAINT pkEspecialidad PRIMARY KEY (ESPID)
+GO
+ALTER TABLE DOCTOR ADD CONSTRAINT pkDoctor PRIMARY KEY (DOCID)
+GO
+ALTER TABLE LABORATORIOS ADD CONSTRAINT pkLaboratorios PRIMARY KEY (LABID)
+GO
+ALTER TABLE MEDICAMENTOS ADD CONSTRAINT pkMedicamentos PRIMARY KEY (MEDID)
+GO
+ALTER TABLE RECETA ADD CONSTRAINT pkReceta PRIMARY KEY (RECID)
+GO
+ALTER TABLE CITAS ADD CONSTRAINT pkCitas PRIMARY KEY (CITAID)
+GO
+ALTER TABLE MEDICAMENTOSXRECETA ADD 
+CONSTRAINT pkMedicamentosXReceta PRIMARY KEY (RECID, MEDID)
+GO
+ALTER TABLE MEDICAMENTOSXLABORATORIOS ADD
+CONSTRAINT pkMedicamentosXLaboratorios PRIMARY KEY (MEDID, LABID)
+GO
+
+-- *CREACION DE LLAVES FORANEAS
+ALTER TABLE CITAS ADD
+CONSTRAINT fkCitasPaciente FOREIGN KEY (PACID) REFERENCES PACIENTE (PACID),
+CONSTRAINT fkCitasDoctor FOREIGN KEY (DOCID) REFERENCES DOCTOR (DOCID),
+CONSTRAINT fkCitasConsultorio FOREIGN KEY (CONID) REFERENCES CONSULTORIO (CONID)
+GO
+ALTER TABLE DOCTOR ADD 
+CONSTRAINT fkDoctorEspecialidad FOREIGN KEY (ESPID) REFERENCES ESPECIALIDAD (ESPID)
+GO
+ALTER TABLE RECETA ADD
+CONSTRAINT fkRecetaCitas FOREIGN KEY (CITAID) REFERENCES CITAS (CITAID)
+GO
+ALTER TABLE MEDICAMENTOSXRECETA ADD
+CONSTRAINT fkUnionReceta FOREIGN KEY (RECID) REFERENCES RECETA (RECID),
+CONSTRAINT fkUnionMedicamentos FOREIGN KEY (MEDID) REFERENCES MEDICAMENTOS (MEDID)
+GO
+ALTER TABLE MEDICAMENTOSXLABORATORIOS ADD
+CONSTRAINT fkUnionMedicamentos2 FOREIGN KEY (MEDID) REFERENCES MEDICAMENTOS (MEDID),
+CONSTRAINT fkUnionLaboratorios FOREIGN KEY (LABID) REFERENCES LABORATORIOS (LABID)
+GO
+
+-- *CREACION DE LLAVES UNICAS
+ALTER TABLE DOCTOR ADD
+CONSTRAINT ucDoctorCedula UNIQUE (DOCCEDULA)
+GO
+ALTER TABLE CONSULTORIO ADD
+CONSTRAINT ucConsultorioTelefono UNIQUE (CONTELEFONO),
+CONSTRAINT ucConsultorioDireccion UNIQUE (CONDIRECCION)
+GO
+ALTER TABLE LABORATORIOS ADD
+CONSTRAINT ucDireccion UNIQUE (LABDIRECCION)
+GO
+
+-- *ASIGNACION DE VALORES DEFAULT
+ALTER TABLE PACIENTE ADD
+CONSTRAINT dfPacienteTelefono DEFAULT '0000000000' FOR PACTELEFONO
+GO
+ALTER TABLE CITAS ADD
+CONSTRAINT dfCitasPresion DEFAULT 'NO SE MIDIÓ' FOR CITAPRESION,
+CONSTRAINT dfCitasPeso DEFAULT 0.00 FOR CITAPESO,
+CONSTRAINT dfCitasAltura DEFAULT 0.00 FOR CITAALTURA
+GO
+ALTER TABLE RECETA ADD
+CONSTRAINT dfRectaFecha DEFAULT GETDATE() FOR RECFECHA
+GO
+
+-- *ASIGNACION DE VALORES DE COMPROBACION
+ALTER TABLE PACIENTE ADD
+CONSTRAINT chkPacienteNacimiento CHECK (PACFECHANACIMIENTO < GETDATE())
+GO
+
+-- *10 INSERCIONES POR CADA TABLA
+INSERT INTO CONSULTORIO (CONID, CONNOMBRE, CONDIRECCION, CONTELEFONO) VALUES 
+(1, 'Consultorio Central', 'Calle Principal 123', '0123456789'),
+(2, 'Consultorio Norte', 'Avenida Norte 456', '0987654321'),
+(3, 'Consultorio Sur', 'Calle Sur 789', '0112233445'),
+(4, 'Consultorio Este', 'Avenida Este 111', '0998877665'),
+(5, 'Consultorio Oeste', 'Calle Oeste 222', '0122334455'),
+(6, 'Consultorio Centro', 'Avenida Centro 333', '0778899001'),
+(7, 'Consultorio Familiar', 'Calle Familia 444', '0111122233'),
+(8, 'Consultorio Urbano', 'Avenida Ciudad 555', '0223344556'),
+(9, 'Consultorio Rural', 'Calle Rural 666', '0334455667'),
+(10, 'Consultorio Especializado', 'Avenida Especialista 777', '0445566778')
+GO
+INSERT INTO PACIENTE (PACID, PACNOMBRE, PACAPEPAT, PACAPEMAT, PACFECHANACIMIENTO, PACTELEFONO) VALUES 
+(1, 'Juan', 'Pérez', 'López', '1985-05-12', '0987654321'),
+(2, 'María', 'Rodríguez', 'Hernández', '1990-07-22', '0123456789'),
+(3, 'Carlos', 'González', NULL, '1978-11-03', '0112233445'),
+(4, 'Ana', 'Martínez', 'Gómez', '1988-04-18', '0223344556'),
+(5, 'Luis', 'Fernández', 'Torres', '1995-06-12', '0334455667'),
+(6, 'Lucía', 'Ramos', NULL, '1981-09-28', '0445566778'),
+(7, 'Pedro', 'Sánchez', 'Ruiz', '2000-02-14', '0556677889'),
+(8, 'Laura', 'Jiménez', 'Núñez', '1992-10-20', '0667788990'),
+(9, 'Diego', 'Vega', 'Castro', '1998-03-25', '0778899001'),
+(10, 'Marta', 'Moreno', 'Ortega', '1993-12-08', '0889900112')
+GO
+INSERT INTO ESPECIALIDAD (ESPID, ESPNOMBRE) VALUES 
+(1, 'Cardiología'),
+(2, 'Neurología'),
+(3, 'Pediatría'),
+(4, 'Dermatología'),
+(5, 'Ginecología'),
+(6, 'Psiquiatría'),
+(7, 'Oncología'),
+(8, 'Oftalmología'),
+(9, 'Endocrinología'),
+(10, 'Urología')
+GO
+INSERT INTO DOCTOR (DOCID, DOCNOMBRE, DOCAPEPAT, DOCAPEMAT, DOCCEDULA, ESPID) VALUES 
+(1, 'José', 'López', 'Ramírez', 'ABC123456', 1),
+(2, 'Mariana', 'García', 'Fernández', 'DEF654321', 2),
+(3, 'Raúl', 'Martínez', 'Castillo', 'GHI789456', 3),
+(4, 'Lucía', 'Pérez', 'Hernández', 'JKL123789', 4),
+(5, 'Alejandro', 'Morales', 'Suárez', 'MNO987654', 5),
+(6, 'Gabriela', 'Vargas', 'Díaz', 'PQR321654', 6),
+(7, 'Fernando', 'Ortega', 'Gómez', 'STU654987', 7),
+(8, 'Clara', 'Ruiz', 'Torres', 'VWX987321', 8),
+(9, 'Ricardo', 'Mendoza', 'Martínez', 'YZT321987', 9),
+(10, 'Patricia', 'Navas', 'López', 'ABC654123', 10)
+GO
+INSERT INTO LABORATORIOS (LABID, LABNOMBRE, LABDIRECCION) VALUES 
+(1, 'Laboratorio Central', 'Calle Ciencia 101'),
+(2, 'Laboratorio Norte', 'Avenida Investigación 202'),
+(3, 'Laboratorio Sur', 'Calle Innovación 303'),
+(4, 'Laboratorio Este', 'Avenida Tecnología 404'),
+(5, 'Laboratorio Oeste', 'Calle Avance 505'),
+(6, 'Laboratorio Biología', 'Avenida Biología 606'),
+(7, 'Laboratorio Química', 'Calle Química 707'),
+(8, 'Laboratorio Física', 'Avenida Física 808'),
+(9, 'Laboratorio Microbiología', 'Calle Microbiología 909'),
+(10, 'Laboratorio Patología', 'Avenida Patología 1010')
+GO
+INSERT INTO MEDICAMENTOS (MEDID, MEDNOMBRE, MEDSUSACT) VALUES 
+(1, 'Paracetamol', 'Tratamiento para fiebre'),
+(2, 'Ibuprofeno', 'Tratamiento para dolor y fiebre'),
+(3, 'Amoxicilina', 'Antibiótico para infecciones'),
+(4, 'Claritromicina', 'Antibiótico para infecciones respiratorias'),
+(5, 'Loratadina', 'Antihistamínico para alergias'),
+(6, 'Metformina', 'Tratamiento para diabetes tipo 2'),
+(7, 'Aspirina', 'Tratamiento para dolor y fiebre'),
+(8, 'Omeprazol', 'Tratamiento para úlceras y acidez'),
+(9, 'Simvastatina', 'Tratamiento para colesterol alto'),
+(10, 'Losartán', 'Tratamiento para hipertensión')
+GO
+INSERT INTO CITAS (CITAID, CITAPRESION, CITAPESO, CITAALTURA, CITASINTOMAS, CITADIAGNOSTICO, PACID, CONID, DOCID) VALUES 
+(1, '120/80', 70.00, 1.75, 'Dolor de cabeza', 'Migraña', 1, 1, 1),
+(2, '130/85', 68.50, 1.80, 'Tos persistente', 'Bronquitis', 2, 2, 2),
+(3, '140/90', 75.00, 1.70, 'Dolor en el pecho', 'Angina', 3, 3, 3),
+(4, '125/80', 80.00, 1.65, 'Fatiga', 'Anemia', 4, 4, 4),
+(5, '110/70', 70.50, 1.78, 'Dolor en la espalda', 'Espondilitis', 5, 5, 5),
+(6, '135/85', 73.00, 1.76, 'Cansancio', 'Fatiga crónica', 6, 6, 6),
+(7, '145/90', 77.00, 1.72, 'Palpitaciones', 'Arritmias', 7, 7, 7),
+(8, '120/75', 72.00, 1.80, 'Dolor de estómago', 'Gastritis', 8, 8, 8),
+(9, '130/80', 78.00, 1.70, 'Estornudos', 'Rinitis alérgica', 9, 9, 9),
+(10, '125/85', 74.00, 1.75, 'Hinchazón', 'Edema', 10, 10, 10)
+GO
+INSERT INTO RECETA (RECID, RECFECHA, CITAID) VALUES 
+(1, '2024-09-01', 1),
+(2, '2024-09-02', 2),
+(3, '2024-09-03', 3),
+(4, '2024-09-04', 4),
+(5, '2024-09-05', 5),
+(6, '2024-09-06', 6),
+(7, '2024-09-07', 7),
+(8, '2024-09-08', 8),
+(9, '2024-09-09', 9),
+(10, '2024-09-10', 10)
+GO
+INSERT INTO MEDICAMENTOSXRECETA (RECID, MEDID, DOSIS, TIEMPOCONSUMO) VALUES 
+(1, 1, '500 mg', 'Cada 8 horas'),
+(1, 2, '400 mg', 'Cada 6 horas'),
+(2, 3, '250 mg', 'Cada 12 horas'),
+(2, 4, '500 mg', 'Cada 8 horas'),
+(3, 5, '10 mg', 'Cada 24 horas'),
+(3, 6, '20 mg', 'Cada 24 horas'),
+(4, 7, '300 mg', 'Cada 6 horas'),
+(4, 8, '40 mg', 'Cada 24 horas'),
+(5, 9, '20 mg', 'Cada 12 horas'),
+(5, 10, '50 mg', 'Cada 24 horas')
+GO
+INSERT INTO MEDICAMENTOSXLABORATORIOS (MEDID, LABID) VALUES 
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(7, 7),
+(8, 8),
+(9, 9),
+(10, 10)
+GO
+SELECT * FROM CONSULTORIO
+SELECT * FROM PACIENTE
+SELECT * FROM ESPECIALIDAD
+SELECT * FROM DOCTOR
+SELECT * FROM LABORATORIOS
+SELECT * FROM MEDICAMENTOS
+SELECT * FROM RECETA
+SELECT * FROM CITAS
+SELECT * FROM MEDICAMENTOSXRECETA
+SELECT * FROM MEDICAMENTOSXLABORATORIOS
