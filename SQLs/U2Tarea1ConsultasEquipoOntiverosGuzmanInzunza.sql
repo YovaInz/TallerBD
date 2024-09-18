@@ -57,10 +57,10 @@ GO
 --? 9.- consulta con los empleados que su nombre y apellido termine con una letra mayúscula. Modificar la tabla con el siguiente código para que muestre un resultado:
 -- update employees set lastname = 'FulleR', FirstName = 'AndreW' where EmployeeID = 2
 -- update employees set lastname = 'BuchanaN', FirstName = 'SteveN' where EmployeeID = 5
-select *
-from Employees
-where RIGHT(FirstName, 1) COLLATE latin1_General_BIN BETWEEN 'A' and 'Z'
-AND RIGHT(LastName, 1) COLLATE latin1_General_BIN BETWEEN 'A' and 'Z'
+SELECT *
+FROM Employees
+WHERE ASCII(RIGHT(FirstName, 1)) BETWEEN 65 AND 90
+AND ASCII(RIGHT(LastName, 1)) BETWEEN 65 AND 90;
 GO
 
 --? 10.- consulta con todas las ordenes que se hayan realizado en los meses que inicial con vocal.

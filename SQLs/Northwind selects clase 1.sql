@@ -237,4 +237,61 @@ from products
 where supplierid = 2
 order by unitprice asc
 
---?doctor consultorio y paciente van conectados a registro de citas
+--!-----------------------CLASE 5 (18/09/2024)---------------------------
+use northwind
+-- ? croos join, combinaciones cruzadas
+-- 10 columnas, 77 renglones
+select * from products 
+-- 4 columnas, 8 renglones
+select * from categories
+
+select * from products cross join categories
+select * from products, categories
+-- columnas: 10 + 4 = 14
+-- renglones: 77 * 8 = 616
+
+-- columnas 12, renglones 29
+select * from suppliers
+
+select * from products cross join categories cross join suppliers
+-- columnas: 10 + 4 + 12 = 26
+-- renglones: 77 * 8 * 29 = 17,864
+
+-- ? consulta con el nombre del producto y nombre de la categoria
+-- ANSI
+select products.productname, categories.categoryname
+from products
+inner join categories on categories.categoryid = products.categoryid
+
+select P.productname , C.categoryname, p.categoryid , c.categoryid
+from Products P
+inner join Categories C on C.categoryid = P.categoryid
+
+-- con transact-SQL
+select p.productname, c.categoryname
+from products p, categories c
+where c.CategoryID = p.CategoryID
+
+-- consulta con el nombre del producto, nombre del proovedor y nombre de la categoria
+select p.ProductName, s.CompanyName, c.CategoryName
+from products p
+inner join suppliers s on s.SupplierID = p.SupplierID
+inner join categories c on c.CategoryID = p.CategoryID
+
+-- consulta con la clave y fecha de la orden, nombre del empleado y nombre del cliente,
+-- mostrar solamente las ordenes realizadas en 1996
+select o.OrderID, o.OrderDate, 'Empleado' = (e.FirstName + ' '+ e.LastName), c.CompanyName
+from orders o
+inner join Employees e on o.EmployeeID = e.EmployeeID
+inner join customers c on o.CustomerID = c.CustomerID
+where YEAR(o.OrderDate) = 1996
+
+-- consulta con l aclave de la orden, nombre del producto, cantidad, precio y total de la venta.
+-- mostrar solo las ordenes realizadas los dias lunes
+select o.orderid, p.ProductName, d.Quantity, d.UnitPrice, total = d.Quantity * d.UnitPrice
+from Orders o
+inner join [order details] d on d.OrderID = o.OrderID
+inner join products p on p.ProductID = d.ProductID
+where DATEPART(dw, o.OrderDate) = 2
+-- *Nota: los corchetes cuadrados se usan cuando hay un espacio en el nombre de la tabla
+select * from [Order Details]
