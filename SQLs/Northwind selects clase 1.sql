@@ -295,3 +295,41 @@ inner join products p on p.ProductID = d.ProductID
 where DATEPART(dw, o.OrderDate) = 2
 -- *Nota: los corchetes cuadrados se usan cuando hay un espacio en el nombre de la tabla
 select * from [Order Details]
+
+--!-----------------------CLASE 6 (19/09/2024)---------------------------
+use northwind
+-- consulta con el nombre del empleado y nombre del territorio que atiende
+select e.firstname + ' '+e.lastname, t.TerritoryDescription
+from employees e
+inner join employeeterritories X on x.employeeid = e.employeeid 
+inner join Territories t on t.TerritoryID = x.TerritoryID
+
+select * from employeeterritories
+
+-- mostrar solo los empleados y clientes que su nombre empiece con vocal
+select o.OrderID, e.FirstName + ' ' + e.LastName, c.CompanyName
+from orders o
+inner join employees e on e.EmployeeID = o.EmployeeID
+inner join customers c on c.CustomerID = o.CustomerID
+WHERE
+e.FirstName like '[aeiou]%'
+AND c.CompanyName like '[aeiou]%'
+
+-- ?SELF JOIN, AUTOCOMBINACIONES
+-- consulta con el nombre del empleado y nombre de su jefe
+select empleados = e.firstname + ' ' +e.lastname, jefe = j.firstname + ' ' + j.LastName
+from employees e
+inner join Employees j on e.ReportsTo = j.EmployeeID
+
+select * from Employees
+
+-- mediante una combinacion externa, s epuede mostrar todos los empleados que no tengan jefe
+select
+ClaveEmp = e.employeeid, empleado = E.firstname + ' ' + E.lastname,
+ClaveJefe = e.ReportsTo, Jefe = J.firstname + ' ' + j.lastname
+FROM employees e left outer join employees j on e.reportsto = j.EmployeeID
+
+select
+ClaveEmp = e.employeeid, empleado = E.firstname + ' ' + E.lastname,
+ClaveJefe = e.ReportsTo, Jefe = J.firstname + ' ' + j.lastname
+FROM employees e right outer join employees j on e.reportsto = j.EmployeeID

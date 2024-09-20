@@ -41,3 +41,64 @@ inner join estados e on e.edoid = m.edoid
 select m.munnombre, m.edoid, e.edoID, e.edonombre
 from municipios m, estados e
 where e.edoid = m.edoid
+
+--!-----------------------CLASE 6 (19/09/2024)---------------------------
+-- ? INNER JOIN
+-- ?combinacion interna
+use prueba
+select * from estados
+select * from municipios
+-- muestra los registros que existen en las 2 tablas
+select m.munnombre, m.edoid, e.edoid, e.edonombre
+from municipios m
+inner join estados e on e.edoid = m.edoid
+
+--? combinación externa
+-- muestra todos los municipios aunque no tengan asignado un estado
+select m.munnombre, m.edoid, e.edoid, e.edonombre
+from municipios m left outer join estados e on e.edoid = m.edoid
+
+select m.munnombre, m.edoid, e.edoID, e.edonombre
+from estados e right outer join municipios m on e.edoID = m.edoid
+
+--? combinación externa
+-- muestra todos los estados aunque no tengan asignado un municipio
+select m.munnombre, m.edoid, e.edoid, e.edonombre
+from municipios m right outer join estados e on e.edoid = m.edoid
+
+select m.munnombre, m.edoid, e.edoID, e.edonombre
+from estados e left outer join municipios m on e.edoID = m.edoid
+
+--? combinacion externa
+-- muestra todos los estados aunque no tengan asignado un municipio
+select m.munnombre, m.edoid, e.edoid, e.edonombre
+from municipios m right outer join estados e on e.edoid = m.edoid
+
+select m.munnombre, m.edoid, e.edoid, e.edonombre
+from estados e left outer join municipios m on e.edoid = m.edoid
+
+--* full outer join
+select m.munnombre, m.edoid, e.edoid, e.edonombre
+from municipios m full outer join estados e on e.edoid = m.edoid
+
+--CONSULTA CON LOS ESTADOS QUE NO TIENEN ASIGNADO UN MUNICIPIO
+select m.munID, m.munnombre, m.edoid, e.edoid, e.edonombre
+from estados e left outer join municipios m on e.edoid = m.edoid
+where m.munid is null
+
+select m.munid, m.munnombre, m.edoid, e.edoid, e.edonombre
+from estados e left outer join municipios m on e.edoid = m.edoid
+where M.munnombre is null
+
+-- consulta con los municipios que no tienen asgnado un estado
+select m.munid, m.munnombre, m.edoid, e.edoid, e.edonombre
+from estados e right outer join municipios m on e.edoid = m.edoid
+where e.edonombre is null
+
+select m.munid, m.munnombre, m.edoid, e.edoid, e.edonombre
+from estados e right outer join municipios m on e.edoid = m.edoid
+where e.edonombre is null
+
+select m.munid, m.munnombre, m.edoid, e.edoid, e.edonombre
+from estados e right outer join municipios m on e.edoid = m.edoid
+where e.edonombre is null

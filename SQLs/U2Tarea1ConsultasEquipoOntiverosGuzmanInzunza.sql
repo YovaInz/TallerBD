@@ -12,6 +12,7 @@ GO
 --? 2.- mostrar los empleados que entraron a trabajar cuando tenían entre 30 y 50 años.
 SELECT Firstname, BirthDate, HireDate, 'Edad cuando entró a trabajar' = datediff(yy, BirthDate, HireDate)
 FROM Employees
+WHERE datediff(yy, BirthDate, HireDate) BETWEEN 30 and 50
 GO
 
 --? 3.- consulta con el nombre del empleado un texto de la siguiente forma cada
