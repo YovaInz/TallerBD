@@ -195,39 +195,39 @@ INSERT INTO ZONAS (ZONAID, ZONANOMBRE, ZONADESCRIPCION) VALUES
 (5, 'Suereste', 'Zona Sureste');
 GO
 INSERT INTO FERRETERIAS (FERRID, FERRNOMBRE, FERRDOMICILIO, FERRTELEFONO) VALUES
-(1, 'FerreterÌa El Clavo', 'Av. Ju·rez 123', '5551234567'),
+(1, 'Ferreter√≠a El Clavo', 'Av. Ju√°rez 123', '6679876541'),
 (2, 'La Casa del Tornillo', 'Calle 5 de Febrero 456', '5552345678'),
-(3, 'Todo para el Hogar', 'Paseo de la Reforma 789', '5553456789'),
-(4, 'FerreterÌa Central', 'Avenida del Libertador 101', '5554567890'),
+(3, 'Todo para el Hogar', 'Paseo de la Reforma 789', '6675412638'),
+(4, 'Ferreter√≠a Central', 'Avenida del Libertador 101', '6671234567'),
 (5, 'Materiales y Herramientas', 'Avenida 16 de Septiembre 202', '5555678901');
 GO
 INSERT INTO FAMILIAS (FAMID, FAMNOMBRE, FAMDESCRIPCION) VALUES
-(1, 'Herramientas', 'Herramientas manuales y elÈctricas'),
-(2, 'FontanerÌa', 'Productos de fontanerÌa y accesorios'),
-(3, 'ElectrodomÈsticos', 'ElectrodomÈsticos para el hogar'),
-(4,'Materiales de construcciÛn', 'Materiales para construcciÛn y remodelaciÛn'),
+(1, 'Herramientas', 'Herramientas manuales y el√©ctricas'),
+(2, 'Fontaner√≠a', 'Productos de fontaner√≠a y accesorios'),
+(3, 'Electrodom√©sticos', 'Electrodom√©sticos para el hogar'),
+(4,'Materiales de construcci√≥n', 'Materiales para construcci√≥n y remodelaci√≥n'),
 (5, 'Pinturas', 'Pinturas y productos relacionados');
 GO
 INSERT INTO ARTICULOS (ARTID, ARTNOMBRE, ARTDESCRIPCION, ARTPRECIO, FAMID) VALUES
 (1, 'Martillo', 'Martillo de acero 16oz', 150.00, 1),
 (2, 'Llave Stilson', 'Llave de acero ajustable', 200.00, 2),
-(3, 'Taladro', 'Taladro inal·mbrico de 12V', 1800.00, 1),
+(3, 'Taladro', 'Taladro inal√°mbrico de 12V', 1800.00, 1),
 (4, 'Cemento', 'Saco de cemento Portland 50kg', 120.00, 4),
-(5, 'Pintura blanca', 'Pintura vinÌlica blanca 1L', 90.00, 5);
+(5, 'Pintura blanca', 'Pintura vin√≠lica blanca 1L', 90.00, 5);
 GO
 INSERT INTO CLIENTES (CTEID, CTENOMBRE, CTEAPEPAT, CTEAPEMAT, CTEDOMICILIO, CTETELEFONO, CTECELULAR, CTERFC, CTECURP, CTEFECHANACIMIENTO, CTESEXO, COLID) VALUES
-(1, 'Juan', 'PÈrez', 'GarcÌa', 'Calle 1 #23', '5556781234', '5556785678', 'PEPJ910101123', 'PEPJ910101HDFRRN02', '1991-01-01', 'M', 1),
-(2, 'MarÌa', 'LÛpez', 'Hern·ndez', 'Avenida 2 #34', '5551236789', '5551234567', 'LOHM920202456', 'LOHM920202MDFRRL09', '1992-02-02', 'F', 2),
-(3, 'Carlos', 'MartÌnez', 'S·nchez', 'Calle 3 #45', '5552347890', '5552345678', 'MASJ930303789', 'MASJ930303HDFRRC03', '1993-03-03', 'M', 3),
-(4, 'Ana', 'GÛmez', 'RodrÌguez', 'Avenida 4 #56', '5553458901', '5553456789', 'GORR940404890', 'GORR940404MDFRRL04', '1994-04-04', 'F', 4),
-(5, 'Luis', 'RamÌrez', 'Vega', 'Calle 5 #67', '5554569012', '5554567890', 'RAVL950505901', 'RAVL950505HDFRRN05', '1995-05-05', 'M', 5);
+(1, 'Juan', 'P√©rez', 'Garc√≠a', 'Calle 1 #23', '6674585417', '6674582905', 'PEPJ910101123', 'PEPJ910101HDFRRN02', '1991-01-01', 'M', 1),
+(2, 'Mar√≠a', 'L√≥pez', 'Hern√°ndez', 'Avenida 2 #34', '5551236789', '5551234567', 'LOHM920202456', 'LOHM920202MDFRRL09', '1992-02-02', 'F', 2),
+(3, 'Carlos', 'Mart√≠nez', 'S√°nchez', 'Calle 3 #45', '5552347890', '5552345678', 'MASJ930303789', 'MASJ930303HDFRRC03', '1993-03-03', 'M', 3),
+(4, 'Ana', 'G√°mez', 'Rodr√≠guez', 'Avenida 4 #56', '6675278135', '6725689978', 'GORR940404890', 'GORR940404MDFRRL04', '1994-04-04', 'F', 4),
+(5, 'Luis', 'Ram√≠rez', 'Vega', 'Calle 5 #67', '5554569012', '5554567890', 'RAVL950505901', 'RAVL950505HDFRRN05', '1995-05-05', 'M', 5);
 GO
 INSERT INTO EMPLEADOS (EMPID, EMPNOMBRE, EMPAPEPAT, EMPAPEMAT, EMPDOMICILIO, EMPTELEFONO, EMPCELULAR, EMPRFC, EMPCURP, EMPFECHAINGRESO, EMPFECHANACIMIENTO, ZONAID, JEFEID) VALUES
-(1, 'Pedro', 'Alvarez', 'LÛpez', 'Calle 6 #78', '5556782345', '5556786789', 'ALVP890606', 'ALVP890606HDFRRL06', '2020-06-06', '1989-06-06', 1, NULL),
-(2, 'Laura', 'Fern·ndez', 'GÛmez', 'Avenida 7 #89', '5557893456', '5557897890', 'FERG870707', 'FERG870707MDFRRL07', '2019-07-07', '1987-07-07', 2, 1),
-(3, 'Jorge', 'Hern·ndez', 'DÌaz', 'Calle 8 #90', '5558904567', '5558908901', 'HEDJ850808', 'HEDJ850808HDFRRN08', '2018-08-08', '1985-08-08', 3, 2),
-(4, 'SofÌa', 'JimÈnez', 'RamÌrez', 'Avenida 9 #101', '5559015678', '5559019012', 'JIRS880909', 'JIRS880909MDFRRL09', '2021-09-09', '1988-09-09', 4, 3),
-(5, 'Miguel', 'Vargas', 'PÈrez', 'Calle 10 #112', '5550126789', '5550120123', 'VAPM820101', 'VAPM820101HDFRRN10', '2022-10-10', '1982-10-01', 5, 4);
+(1, 'Pedro', 'Alvarez', 'L√≥pez', 'Calle 6 #78', '5556782345', '5556786789', 'ALVP890606', 'ALVP890606HDFRRL06', '2020-06-06', '1989-06-06', 1, NULL),
+(2, 'Laura', 'Fern√°ndez', 'G√°mez', 'Avenida 7 #89', '5557893456', '5557897890', 'FERG870707', 'FERG870707MDFRRL07', '2019-07-07', '1987-07-07', 2, 1),
+(3, 'Jorge', 'Hern√°ndez', 'D√≠az', 'Calle 8 #90', '5558904567', '5558908901', 'HEDJ850808', 'HEDJ850808HDFRRN08', '2018-08-08', '1985-08-08', 3, 2),
+(4, 'Sof√≠a', 'Jim√©nez', 'Ram√≠rez', 'Avenida 9 #101', '5559015678', '5559019012', 'JIRS880909', 'JIRS880909MDFRRL09', '2021-09-09', '1988-09-09', 4, 3),
+(5, 'Miguel', 'Vargas', 'P√©rez', 'Calle 10 #112', '5550126789', '5550120123', 'VAPM820101', 'VAPM820101HDFRRN10', '2022-10-10', '1982-10-01', 5, 4);
 GO
 INSERT INTO VENTAS (FOLIO, FECHA, FERRID, CTEID, EMPID) VALUES
 (1, '2022-01-01', 1, 1, 1),
