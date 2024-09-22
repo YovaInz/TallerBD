@@ -21,9 +21,8 @@ GO
 
 --? 3.- Consulta con el folio de la venta, nombre del artículo, cantidad de piezas vendidas, precio e importe total. 
 --?     Mostrar solo los artículos de las familias que su nombre empieza con las letras Q, R, T, G.
-SELECT V.FOLIO, A.ARTNOMBRE, D.CANTIDAD, A.ARTPRECIO, 'IMPORTE TOTAL' = D.PRECIO*D.CANTIDAD
+SELECT D.FOLIO, A.ARTNOMBRE, D.CANTIDAD, A.ARTPRECIO, 'IMPORTE TOTAL' = D.PRECIO*D.CANTIDAD
 FROM DETALLE D
-INNER JOIN VENTAS V ON V.FOLIO = D.FOLIO
 INNER JOIN ARTICULOS A ON A.ARTID = D.ARTID
 INNER JOIN FAMILIAS F ON F.FAMID = A.FAMID
 WHERE F.FAMNOMBRE LIKE '[QRTG]%'

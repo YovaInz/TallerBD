@@ -26,7 +26,7 @@ FROM Employees;
 GO
 
 --? 4.- consulta con la clave y fecha de la orden que se hayan realizado los días lunes del primer semestre de todos los años.
-select OrderID, OrderDate
+select OrderID, OrderDate, DATENAME(WEEKDAY, OrderDate)
 from orders
 where DATENAME(WEEKDAY, OrderDate) = 'Lunes' AND MONTH(OrderDate) <= 6 
 GO
