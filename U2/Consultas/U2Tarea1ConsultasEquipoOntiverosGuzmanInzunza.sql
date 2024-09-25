@@ -92,7 +92,7 @@ GO
 --? 14.- consulta con las ordenes que NO tengan compañía de envío o que se hayan realizado en el mes de enero.
 SELECT OrderID, OrderDate, ShipVIA
 FROM Orders
-WHERE ShipVia = null or MONTH(OrderDate) = 1
+WHERE ShipVia IS NULL or MONTH(OrderDate) = 1
 GO
 
 --? 15.- consulta con las 10 últimas ordenes de 1997.

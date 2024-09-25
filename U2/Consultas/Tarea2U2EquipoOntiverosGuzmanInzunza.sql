@@ -9,7 +9,7 @@ INNER JOIN FERRETERIAS F ON F.FERRID = V.FERRID
 WHERE YEAR(V.FECHA) % 3 = 0 AND DATENAME(MM, V.FECHA) LIKE '%r%'
 GO
 
---? 2.- Consulta con el folio de la venta, fecha de la venta, meses que han pasado desde que se hizo la venta, nombre del cliente y nombre de la ferretería.      
+--? 2.- Consulta con el folio de la venta, fecha de la venta, meses que han pasado desde que se hizo la venta, nombre del cliente y nombre de la ferretería.
 --?     Mostrar solo las ventas de los clientes y ferreterías que sus teléfonos empiece con 667.
 SELECT V.FOLIO, V.FECHA, 'MESES DESDE LA VENTA' = DATEDIFF(MM, V.FECHA, GETDATE()), 
 'CLIENTE' = C.CTENOMBRE + ' '+ C.CTEAPEPAT + ' ' + C.CTEAPEMAT, F.FERRNOMBRE

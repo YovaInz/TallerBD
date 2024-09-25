@@ -81,7 +81,7 @@ from estados e left outer join municipios m on e.edoid = m.edoid
 select m.munnombre, m.edoid, e.edoid, e.edonombre
 from municipios m full outer join estados e on e.edoid = m.edoid
 
---CONSULTA CON LOS ESTADOS QUE NO TIENEN ASIGNADO UN MUNICIPIO
+-- CONSULTA CON LOS ESTADOS QUE NO TIENEN ASIGNADO UN MUNICIPIO
 select m.munID, m.munnombre, m.edoid, e.edoid, e.edonombre
 from estados e left outer join municipios m on e.edoid = m.edoid
 where m.munid is null
