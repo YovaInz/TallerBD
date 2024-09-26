@@ -302,3 +302,134 @@ inner join Categories c on c.CategoryID = p.CategoryID
 go
 -- ejecución de la vista productos
 select * from vw_products
+---------------------------------------------------------------------------
+go
+-- continuación
+create view vw_Orders2 as
+select
+o.orderid, o.orderdate,
+c.customerid, NomCliente = c.companyname,
+e.EmployeeID, e.LastName, e.FirstName,
+s.ShipperID, NomComEnvio = s.CompanyName
+from orders o 
+inner join Employees e on o.EmployeeID = e.EmployeeID
+inner join customers c on o.CustomerID = c.CustomerID
+inner join shippers s on o.ShipVia = s.ShipperID
+go
+create view vw_OrderDetails2 as
+SELECT
+d.orderid, d.productid, d.quantity, d.unitprice, d.Discount,
+o.orderdate, o.shipperid, o.nomcomenvio, o.customerid, o.nomcliente, o.lastname, o.firstname,
+p.productname, p.categoryid, p.categoryname, p.supplierid, p.companyname
+from [order details] d
+inner join vw_orders2 o on d.orderid = o.orderid
+inner join vw_products p on d.productid = p.productid
+go
+
+--!--------------- CLASE 25/09/2024 -------------------
+use northwind
+--* AGRUPAMIENTO (group by)
+-- Funciones agregados: regresan un solo valor
+-- count
+-- sum
+-- max
+-- avg
+select * from vw_products
+
+-- total de productos, todos los renglones
+select COUNT(*) from vw_products
+-- suma de todos los precios de los productos
+select SUM(unitprice) from products
+-- clave maxima de productos
+select MAX(productid) from vw_products
+-- clave minima de productos
+select MIN(productid) from vw_products
+-- fecha mas grande de ordenes
+select MAX(orderdate) from orders
+-- fecha mas pequeña de ordenes
+select MIN(orderdate) from orders
+
+--? Consulta con el nombre del proveedor y cuantos productos surte
+select productname, categoryname, companyname
+from vw_products
+order by companyname
+
+-- primero agrupamos por nombre del proveedor
+select CompanyName
+from vw_products
+group by companyname -- busca los proveedores distintos
+
+-- ahora se aplican la función count sobre el grupo by
+select companyname, total = count(*)
+from vw_products
+group by companyname -- busca los proovedores distintos
+
+--? consulta con el nombre del producto y total de piezas vendidas
+select orderid, productname, quantity, unitprice
+from vw_OrderDetails2
+order by productname
+
+-- muestra los productos distintos 
+select productname
+from vw_OrderDetails2
+group by productname
+
+-- muestra los productos distintos y suma las piezas vendidas
+select productname, Piezas = sum(quantity)
+from vw_OrderDetails2
+group by productname
+order by productname
+
+--? consulta con el folio de la orden y el importe total de la venta
+select orderid, productname, quantity, unitprice
+from vw_OrderDetails2
+
+-- muestra las ordenes distintas
+select orderid
+from vw_OrderDetails2
+
+select orderid, Importe = sum(quantity * unitprice)
+from vw_OrderDetails2
+group by OrderID
+
+select importe = sum(quantity * unitprice) 
+from vw_OrderDetails2
+
+-- 10 ordenes mas caras
+select top 10 orderid, 'Importe' = sum(quantity * unitprice)
+from vw_OrderDetails2
+group by OrderID
+order by UnitPrice asc
+
+--? consulta con el nombre de la categoria y total de productos que surte
+-- mostrar solo las categorias que tengan menos de 10 productos
+select productname, categoryname
+from vw_products
+order by CategoryName
+
+-- muestra el agrupamiento las categorias distintas
+select categoryname, count(*)
+from vw_products
+group by categoryname
+
+--! marca error, no se permiten funciones de agregado en el where
+select categoryname, total = count(*)
+from vw_products
+where count(*) < 10
+group by CategoryName
+
+--* es necesario inclyuir la función de agregado en la clausula having
+select categoryname, total = count(*)
+from vw_products
+group by CategoryName
+having count(*) < 10
+
+--? Consulta con el nombre del proveedor y total de productos que surte
+-- mostrar solo los proveedores que su nombre empiece con m,n
+-- y que surtan entre 1 y 2 productos
+
+select companyname, count(*)
+from vw_products
+where companyname like '[mn]%'
+group by CompanyName
+having count(*) BETWEEN 1 and 2
