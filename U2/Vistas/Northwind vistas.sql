@@ -427,9 +427,150 @@ having count(*) < 10
 --? Consulta con el nombre del proveedor y total de productos que surte
 -- mostrar solo los proveedores que su nombre empiece con m,n
 -- y que surtan entre 1 y 2 productos
-
 select companyname, count(*)
 from vw_products
 where companyname like '[mn]%'
 group by CompanyName
 having count(*) BETWEEN 1 and 2
+
+--!-----------------------CLASE (30/09/2024)---------------------------
+use northwind
+--?Consulta con el nombre del cliente, total de ordenes realizadas e importe total de ventas,
+-- mostrar solo los clientes con un importe mayor a 10,000
+
+select orderid, nomcliente, productname, quantity, unitprice
+from vw_OrderDetails2
+order by nomcliente
+
+select nomcliente, mal = count(*),
+correcto = count(distinct orderid), imp = sum(quantity * unitprice)
+from vw_OrderDetails2
+group by nomcliente
+order by nomcliente
+
+--? CONSULTA CON EL NOMBRE DEL PRODUCTO, TOTAL DE PIEZAS VENDIDAS E IMPORTE DE VENTA
+-- MOSTRAR SOLO LOS PRODUCTOS QUE TENGAN UN IMPORTE MENOR A 3000
+select orderid, nomcliente, productname, quantity, unitprice
+from vw_OrderDetails2
+order by productname
+
+select productname,
+Piezas = sum(quantity),
+Importe = sum(quantity * unitprice)
+from vw_OrderDetails2
+group by productname
+having sum(quantity * unitprice) < 3000
+
+--? NOMBRE DEL EMPLEADO, TOTAL DE ORDENES REALIZADAS, TOTAL DE CLIENTES ATENDIDOS E IMPORTE DE VENTA
+select orderid, firstname, lastname, customerid, nomcliente, productname, quantity, unitprice
+from vw_OrderDetails2
+ORDER BY firstname
+
+select firstname + ' ' + lastname,
+mal = count(*),
+Ordenes = count(distinct orderid),
+Clientes = count(distinct customerid),
+Importe = sum(quantity * unitprice)
+from vw_OrderDetails2
+group by firstname, lastname
+order by firstname
+
+select count(*) from vw_OrderDetails2
+select count(*) from Orders
+
+--? consulta con el año, total de ordenes realizadas con importe total de ventas
+-- mostrar solo los años con un importe mayor a 600,000
+
+select orderid, orderdate, año = year(orderdate), mes = MONTH(orderdate), productname,
+quantity, unitprice
+from vw_OrderDetails2
+
+select año = year(orderdate),
+Ordenes = count(distinct orderid),
+Importe = sum(quantity * unitprice)
+from vw_OrderDetails2
+group by year(orderdate)
+having sum(quantity * unitprice) > 600000
+
+--* CASE
+--? consulta con el nombre del cliente, el importe de ventas,
+-- importe de 1996, importe 1997 e importe 1998
+select orderid, nomcliente, quantity, unitprice from vw_OrderDetails2
+order by nomcliente
+
+select nomcliente, Total = sum(quantity * unitprice)
+from vw_OrderDetails2
+group by nomcliente
+
+--! estructura de case when
+--? case when condicion then "verdadero" else "falso" END
+
+--? case when condicion THEN
+--?     "verdadero"
+--? else
+--?     "falso"
+--? End
+
+--? consulta con el nombre del producto y una columna que diga si el producto es caro (mad de 50)
+--? o barato (menos de 50)
+select productname, unitprice, tipo = case when unitprice >= 50 then 'Caro' else 'Barato' END
+from Products
+
+select nomcliente,
+total = sum(quantity*unitprice),
+total96 = sum(case when year(orderdate) = 1996 then quantity*unitprice else 0 end),
+total97 = sum(case when year(orderdate) = 1997 then quantity*unitprice else 0 end),
+total98 = sum(case when year(orderdate) = 1998 then quantity*unitprice else 0 end)
+from vw_OrderDetails2
+group by nomcliente
+
+select * from customers
+--? la consulta anterior no muestra todos los clientes, modifica la consulta para que los muestre
+select c.companyname, ImporteTotal = ISNULL(sum(d.quantity * d.unitprice), 0),
+importe96 = sum(case when year(orderdate) = 1996 then quantity*unitprice else 0 end),
+importe97 = sum(case when year(orderdate) = 1997 then quantity*unitprice else 0 end),
+importe98 = sum(case when year(orderdate) = 1998 then quantity*unitprice else 0 end)
+from Customers c left outer join vw_OrderDetails2 d on c.CustomerID = d.customerid
+group by c.CompanyName
+
+--? consulta con el nombre del cliente, el importe total de ventas,
+--? importe de 1996, importe de 1997 e importe de 1998
+
+--* metodo 2, con vistas
+GO 
+create view vw_cte96 as
+select nomcliente, T96 = sum(quantity * unitprice)
+from vw_OrderDetails2
+where year (orderdate) = 1996
+group by nomcliente
+GO
+create view vw_cte97 as
+select nomcliente, T97 = sum(quantity * unitprice)
+from vw_OrderDetails2
+where year (orderdate) = 1997
+group by nomcliente
+GO
+create view vw_cte98 as
+select nomcliente, T98 = sum(quantity * unitprice)
+from vw_OrderDetails2
+where year (orderdate) = 1998
+group by nomcliente
+GO
+
+select * from vw_cte96
+select * from vw_cte97
+select * from vw_cte98
+
+--! no muestra todos los clientes
+SELECT A.nomcliente, A.T96, B.T97, C.T98
+FROM vw_cte96 A
+inner join vw_cte97 B on B.nomcliente = A.nomcliente
+inner join vw_cte98 C on C.nomcliente = A.nomcliente
+
+-- muestra todos los clientes
+SELECT C.CompanyName, T96 = ISNULL(A.T96, 0), T97 = ISNULL(B.T97, 0), T98 = ISNULL(D.T98, 0)
+FROM CUSTOMERS C
+LEFT OUTER JOIN vw_cte96 A ON A.nomcliente = C.CompanyName
+LEFT OUTER JOIN vw_cte97 B ON B.nomcliente = C.CompanyName
+LEFT OUTER JOIN vw_cte98 D ON D.nomcliente = C.CompanyName
+ORDER BY C.CompanyName
