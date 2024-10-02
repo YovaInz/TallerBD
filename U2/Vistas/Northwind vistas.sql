@@ -574,3 +574,101 @@ LEFT OUTER JOIN vw_cte96 A ON A.nomcliente = C.CompanyName
 LEFT OUTER JOIN vw_cte97 B ON B.nomcliente = C.CompanyName
 LEFT OUTER JOIN vw_cte98 D ON D.nomcliente = C.CompanyName
 ORDER BY C.CompanyName
+
+--!--------------- CLASE 02/10/2024 -------------------
+use northwind
+--? CONSULTA CON EL NOMBRE DEL DIA DE LA SEMANA, TOTAL DE ORDENES REALIZADAS E
+--? IMPORTE DE VENTA DE ESE DIA
+select orderid, diasemana = datepart(dw, orderdate), mes = datename(dw, orderdate),
+productname, quantity, unitprice
+from vw_OrderDetails2
+order by datepart(dw, orderdate)
+
+select 
+dia = datename(dw, orderdate),
+ordenes = count(distinct orderid),
+importe = sum(quantity * unitprice)
+from vw_OrderDetails2
+group by datename(dw,orderdate), datepart(dw, orderdate)
+order by datepart(dw, orderdate)
+go
+
+-- la consulta anterior no muestra todos los dias de la semana
+create view vw_dias as 
+    select Clave = 1, Nombre = 'Domingo'
+    union 
+    select 2, 'Lunes'
+    union
+    select 3, 'Martes'
+    union
+    select 4, 'Miercoles'
+    union
+    select 5, 'Jueves'
+    union
+    select 6, 'Viernes'
+    union
+    select 7, 'Sabado'
+go
+select * from vw_dias
+
+select EmployeeID, firstname, 'e' from employees
+UNION
+select supplierid, companyname, 's' from suppliers
+order by 2
+
+select 
+d.nombre,
+ordenes = count(distinct od.orderid),
+importe = ISNULL(SUM(od.quantity * od.unitprice), 0)
+from vw_OrderDetails2 od right outer join vw_dias d on d.clave = datepart(dw, od.orderdate)
+GROUP by d.Nombre, d.Clave
+order by d.Clave asc
+
+-- consulta con el nombre del cliente y el importe de venta por día de la semana
+select * from vw_OrderDetails2
+
+select c.companyname, Total = isnull(sum(quantity*unitprice), 0),
+domingo = sum(case when datepart(dw, orderdate) = 1 then quantity * unitprice else 0 end),
+lunes = sum(case when datepart(dw, orderdate) = 2 then quantity * unitprice else 0 end),
+martes = sum(case when datepart(dw, orderdate) = 3 then quantity * unitprice else 0 end),
+miercoles = sum(case when datepart(dw, orderdate) = 4 then quantity * unitprice else 0 end),
+jueves = sum(case when datepart(dw, orderdate) = 5 then quantity * unitprice else 0 end),
+viernes = sum(case when datepart(dw, orderdate) = 6 then quantity * unitprice else 0 end),
+sabado = sum(case when datepart(dw, orderdate) = 17 then quantity * unitprice else 0 end)
+
+from vw_OrderDetails2 d right outer join customers c on c.customerid = d.customerid
+GROUP BY c.CompanyName
+order by 2
+
+-- consulta nombre del cliente,
+-- total de ordenes con un importe de $1 a $100, $101 a $200, $201 a $300, $301 a $400, $401 a mas
+go
+create view vw_importetotal AS
+SELECT orderid, importe = sum(quantity*unitprice) , nomcliente
+from vw_orderdetails2
+group by orderid, nomcliente
+go
+SELECT nomcliente, total = COUNT(orderid),
+'$1-$100' = sum(case when importe between 1 and 100 then 1 else 0 end),
+'$100-$200' = sum(case when importe between 101 and 200 then 1 else 0 end),
+'$200-$300' = sum(case when importe between 201 and 300 then 1 else 0 end),
+'$300-$400' = sum(case when importe between 301 and 400 then 1 else 0 end),
+'$400-$N' = sum(case when importe > 400 then 1 else 0 end)
+from vw_importetotal
+GROUP BY nomcliente
+ORDER BY nomcliente
+
+-- REALIZA LA TRASPUESTA DE LA CONSULTA ANTERIOR
+select datepart (dw, orderdate), Dia = datename(dw, orderdate),
+t1996 = sum(case when year(orderdate) = 1996  then quantity * unitprice end),
+t1997 = sum(case when year(orderdate) = 1997  then quantity * unitprice end),
+t1998 = sum(case when year(orderdate) = 1998  then quantity * unitprice end)
+from vw_OrderDetails2
+group by datename(dw, orderdate), datepart(dw, orderdate)
+UNION
+select 11, 'Total',
+T96 = sum(case when year(orderdate) = 1996  then quantity * unitprice end),
+T97 = sum(case when year(orderdate) = 1997  then quantity * unitprice end),
+T98 = sum(case when year(orderdate) = 1998  then quantity * unitprice end)
+from vw_OrderDetails2
+order by datepart(dw, orderdate)
