@@ -115,7 +115,7 @@ go
 --? vw_citas                (citas, vw_consultorios)
 --*------------------------------------------------------------------------
 -- vw_hospitales (hospitales, zona)
-CREATE or alter VIEW vw_hospitales AS
+CREATE VIEW vw_hospitales AS
 SELECT 
 H.HOSPID, HOSPITAL = H.NOMBRE,
 Z.ZONAID, ZONA = Z.NOMBRE
@@ -123,7 +123,7 @@ FROM HOSPITALES H
 INNER JOIN ZONAS Z ON Z.ZONAID = H.ZONAID
 GO
 -- vw_consultorios (consultorios, vw_hospitales)
-CREATE or alter VIEW vw_consultorios AS
+CREATE VIEW vw_consultorios AS
 SELECT
 C.CONID, CONSULTORIO = C.NOMBRE, VWH.*
 FROM CONSULTORIOS C
@@ -131,7 +131,7 @@ INNER JOIN vw_hospitales VWH on (VWH.HOSPID = C.HOSPID) and (VWH.ZONAID = C.ZONA
 
 GO
 -- vw_citas (citas, vw_consultorios)
-CREATE or alter VIEW vw_citas AS
+CREATE VIEW vw_citas AS
 SELECT
 C.FOLIO, C.FECHA, C.PESO, C.ALTURA, C.PRESION, C.OBSERVACIONES, VWC.*
 FROM CITAS C
@@ -252,3 +252,5 @@ GO
 SELECT ZONA, CITAS = COUNT(*), HOSPITALES = COUNT(DISTINCT HOSPID), CONSULTORIOS = COUNT(DISTINCT CONID)
 FROM vw_citas
 GROUP BY ZONA
+
+select * from vw_citas
