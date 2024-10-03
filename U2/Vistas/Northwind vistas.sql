@@ -640,8 +640,25 @@ from vw_OrderDetails2 d right outer join customers c on c.customerid = d.custome
 GROUP BY c.CompanyName
 order by 2
 
+-- REALIZA LA TRASPUESTA DE LA CONSULTA ANTERIOR
+select datepart (dw, orderdate), Dia = datename(dw, orderdate),
+t1996 = sum(case when year(orderdate) = 1996  then quantity * unitprice end),
+t1997 = sum(case when year(orderdate) = 1997  then quantity * unitprice end),
+t1998 = sum(case when year(orderdate) = 1998  then quantity * unitprice end)
+from vw_OrderDetails2
+group by datename(dw, orderdate), datepart(dw, orderdate)
+UNION
+select 11, 'Total',
+T96 = sum(case when year(orderdate) = 1996  then quantity * unitprice end),
+T97 = sum(case when year(orderdate) = 1997  then quantity * unitprice end),
+T98 = sum(case when year(orderdate) = 1998  then quantity * unitprice end)
+from vw_OrderDetails2
+order by datepart(dw, orderdate)
+
+--!--------------- CLASE 03/10/2024 -------------------
 -- consulta nombre del cliente,
 -- total de ordenes con un importe de $1 a $100, $101 a $200, $201 a $300, $301 a $400, $401 a mas
+--* metodo 1
 go
 create view vw_importetotal AS
 SELECT orderid, importe = sum(quantity*unitprice) , nomcliente
@@ -658,17 +675,61 @@ from vw_importetotal
 GROUP BY nomcliente
 ORDER BY nomcliente
 
--- REALIZA LA TRASPUESTA DE LA CONSULTA ANTERIOR
-select datepart (dw, orderdate), Dia = datename(dw, orderdate),
-t1996 = sum(case when year(orderdate) = 1996  then quantity * unitprice end),
-t1997 = sum(case when year(orderdate) = 1997  then quantity * unitprice end),
-t1998 = sum(case when year(orderdate) = 1998  then quantity * unitprice end)
-from vw_OrderDetails2
-group by datename(dw, orderdate), datepart(dw, orderdate)
-UNION
-select 11, 'Total',
-T96 = sum(case when year(orderdate) = 1996  then quantity * unitprice end),
-T97 = sum(case when year(orderdate) = 1997  then quantity * unitprice end),
-T98 = sum(case when year(orderdate) = 1998  then quantity * unitprice end)
-from vw_OrderDetails2
-order by datepart(dw, orderdate)
+--* metodo 2
+
+SELECT T.nomcliente, total = COUNT(orderid),
+'$1-$100' = sum(case when importe between 1 and 100 then 1 else 0 end),
+'$100-$200' = sum(case when importe between 101 and 200 then 1 else 0 end),
+'$200-$300' = sum(case when importe between 201 and 300 then 1 else 0 end),
+'$300-$400' = sum(case when importe between 301 and 400 then 1 else 0 end),
+'$400-$N' = sum(case when importe > 400 then 1 else 0 end)
+from (
+SELECT orderid, importe = sum(quantity*unitprice) , nomcliente
+from vw_orderdetails2
+group by orderid, nomcliente) T
+GROUP BY T.nomcliente
+ORDER BY nomcliente
+
+--* metodo 3
+SELECT nomcliente, orderid, importe = sum(quantity*unitprice)
+INTO #T
+from vw_orderdetails2
+group by orderid, nomcliente
+order by 1,2
+go
+select * from #T
+go
+SELECT nomcliente, total = COUNT(orderid),
+'$1-$100' = sum(case when importe between 1 and 100 then 1 else 0 end),
+'$100-$200' = sum(case when importe between 101 and 200 then 1 else 0 end),
+'$200-$300' = sum(case when importe between 201 and 300 then 1 else 0 end),
+'$300-$400' = sum(case when importe between 301 and 400 then 1 else 0 end),
+'$400-$N' = sum(case when importe > 400 then 1 else 0 end)
+from #T
+GROUP BY nomcliente
+
+-- REALIZAR UN REPORTE CON LAS SIGUIENTES COLUMNAS
+-- IMPORTES ORDEN       TOTAL ORDENES
+-- 0 A 500                 219
+-- 501 A 1000              192
+-- 1001 A 2000             208
+-- 2001 A 3000             108
+-- MAS DE 3000             103
+GO
+CREATE VIEW vw_importes AS
+SELECT ORDERID, IMPORTE = SUM(QUANTITY*UNITPRICE),
+TIPO =
+CASE WHEN SUM(quantity * unitprice) BETWEEN 0 AND 500 THEN '1.- 0 A 500' ELSE
+CASE WHEN SUM(quantity * unitprice) BETWEEN 501 AND 1000 THEN '2.- 501 A 1000' ELSE
+CASE WHEN SUM(quantity * unitprice) BETWEEN 1001 AND 2000 THEN '3.- 1001 A 2000' ELSE
+CASE WHEN SUM(quantity * unitprice) BETWEEN 2001 AND 3000 THEN '4.- 2001 A 3000' ELSE  '5.- MAS DE 3000' 
+END END END END
+FROM vw_OrderDetails2
+GROUP BY orderid
+GO
+SELECT * FROM vw_importes
+ORDER BY TIPO
+GO
+SELECT TIPO, TOTAL = COUNT(*)
+FROM vw_importes
+GROUP BY TIPO
