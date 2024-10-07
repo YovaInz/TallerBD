@@ -200,9 +200,9 @@ HAVING SUM(importe) > 500
 --* 7.- CONSULTA CON EL DIA DE LA SEMANA EL TOTAL DE RENTAS REALIZADAS EN EL 2020, TOTAL DE RENTAS REALIZADAS EN 2021 Y TOTAL DE RENTAS REALIZADAS EN 2022.
 SELECT
 'dia de la semana' = DATENAME(DW, fecha), 
-'2020' = case when year(fecha) = 2020 then COUNT(folio) else 0 end,
-'2021' = case when year(fecha) = 2021 then COUNT(folio) else 0 end,
-'2022' = case when year(fecha) = 2022 then COUNT(folio) else 0 end
+'2020' = SUM(case when year(fecha) = 2020 then 1 else 0 end),
+'2021' = SUM(case when year(fecha) = 2021 then 1 else 0 end),
+'2022' = SUM(case when year(fecha) = 2022 then 1 else 0 end)
 FROM vw_rentas
 GROUP BY DATENAME(DW, fecha)
 
