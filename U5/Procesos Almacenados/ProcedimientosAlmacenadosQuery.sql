@@ -25,7 +25,8 @@ SELECT @conta
 
 -- SE PUEDE USAR "SELECT" O "SET" PARA ASIGNAR VALORES A UNA VARIABLE @
 GO
-CREATE TABLE #T(employeeid, dias)
+DECLARE @min INT, @fecha DATE
+CREATE TABLE #T(employeeid int, dias date)
 @min = min(employeeid) from employees
 WHERE @min is not null
 BEGIN
@@ -76,12 +77,12 @@ BEGIN TRY
  SET @Valor1 = 100
  SET @Valor2 = 0
  Set @Division = @Valor1 / @Valor2
- PRINT 'La división no reporta error'
+ PRINT 'La divisiï¿½n no reporta error'
 END TRY
 BEGIN CATCH
- select @@error AS 'Error', ERROR_NUMBER() AS 'N° de Error', ERROR_SEVERITY() As 'Severidad',
+ select @@error AS 'Error', ERROR_NUMBER() AS 'Nï¿½ de Error', ERROR_SEVERITY() As 'Severidad',
  ERROR_STATE() As 'Estado', ERROR_PROCEDURE() As 'Procedimiento',
- ERROR_LINE() As 'N° línea',
+ ERROR_LINE() As 'Nï¿½ lï¿½nea',
  ERROR_MESSAGE() As 'Mensaje'
 END CATCH
 
@@ -140,8 +141,8 @@ CREATE PROC SP_REGRESO @EMP INT AS
 SELECT ORDERID, ORDERDATE FROM ORDERS WHERE EMPLOYEEID = @EMP
 GO
 -- EJECUCION
-exec SP_REGRESO 3 --  el número 3 representa el valor que se pasa al parámetro @EMP en tu procedimiento almacenado SP_REGRESO. 
-				  --  Así que está obteniendo los pedidos del empleado con la ID 3.
+exec SP_REGRESO 3 --  el nï¿½mero 3 representa el valor que se pasa al parï¿½metro @EMP en tu procedimiento almacenado SP_REGRESO. 
+				  --  Asï¿½ que estï¿½ obteniendo los pedidos del empleado con la ID 3.
 
 -- CREAMOS UNA TABLA TEMPORAL PARA INSERTAR EL RESULTADO DE UN PROC ALM QUE
 -- REGRESE UNA TABLA
